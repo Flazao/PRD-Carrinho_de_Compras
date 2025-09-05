@@ -4,20 +4,20 @@ require_once "CarrinhoDeCompra.php";
 
 $cart = new CartShop();
 
-// echo $cart->addProductInCart(1);
-// echo $cart->addProductInCart(2);
-// echo $cart->addProductInCart(3);
+echo $cart->addProductToCart(1, 2) . "<br>";
+echo $cart->addProductToCart(2) . "<br>";
+echo $cart->addProductToCart(3, 2) . "<br>";
+echo $cart->addProductToCart(99) . "<br>"; 
+echo $cart->addProductToCart(3, 10) . "<br>"; 
 
-// echo "-------------------------------------";
+echo "<hr>";
+echo $cart->listCart();
 
-// $cart->removeProductInCart(3);
+echo "<hr>";
+echo $cart->applyCoupon("DESCONTO10") . "<br>";
+echo $cart->listCart();
 
-// echo "=====================================";
-
-// $cart->validateProductExists(3);
-// $cart->validateAvailableStock(2);
-
-// echo "-------------------------------------";
-
-
-//Eu arrumei o nome das funções e falta trocar, estou atrasado pro trabalho e nao consigo fazer mais.
+echo "<hr>";
+echo $cart->removeProductFromCart(1) . "<br>";
+echo $cart->removeProductFromCart(1) . "<br>";
+echo $cart->listCart();
