@@ -3,7 +3,7 @@
 class CartShop
 {
     public $products;
-    public $carts = [];
+    public array $cart = []; // carrinho sempre começa vazio
 
     public function __construct()
     {
@@ -29,33 +29,107 @@ class CartShop
         ];
     }
 
-    public function validateProduct(): void
+    public function validateProductExists(int $productId): bool
     {
         foreach ($this->products as $product) {
-            if ($product['id'] != $product['id']) {
-                throw new Exception(message: 'Não existe o produto');
+            if ($product['id'] === $productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function validateAvailableStock(int $productId): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product['id'] === $productId && $product['estoque'] > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function addProductInCart(int $productId): string
+    {
+        if (!$this->validateProductExists($productId)) {
+            return "Produto não existe.";
+        }
+
+        if (!$this->validateAvailableStock($productId)) {
+            return "Estoque indisponível.";
+        }
+
+        foreach ($this->cart as &$item) {
+            if ($item['id_produto'] === $productId) {
+                $item['quantidade']++;
+                $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
+                $this->updateStock($productId, -1);
+                return "Produto incrementado no carrinho. <br>";
+            }
+        }
+
+        $price = $this->getProductPrice($productId);
+        $this->cart[] = [
+            'id_produto' => $productId,
+            'quantidade' => 1,
+            'subtotal' => $price
+        ];
+        $this->updateStock($productId, -1);
+
+        return "Produto adicionado ao carrinho. <br>";
+    }
+
+    public function validateItemInCart(int $productId): bool
+    {
+        foreach ($this->cart as $item) {
+            if ($item['id_produto'] === $productId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function removeProductInCart(int $productId)
+    {
+        if (!$this->validateItemInCart($productId)) {
+            return "Produto não está no carrinho.";
+        }
+
+        foreach ($this->cart as $index => &$item) {
+            if ($item['id_produto'] === $productId) {
+                $item['quantidade']--;
+
+                if ($item['quantidade'] <= 0) {
+                    unset($this->cart[$index]);
+                } else {
+                    $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
+                }
+
+                $this->updateStock($productId, 1);
+                return "Produto removido do carrinho.";
             }
         }
     }
 
-    public function itsStockEnough(): void {
-        foreach ($this->products as $product) {
-            if ($product['estoque'] == 0 ){
-                throw new Exception(message: 'Produto fora do estoque :(');
+    private function updateStock(int $productId, int $quantity): void
+    {
+        foreach ($this->products as &$product) {
+            if ($product['id'] === $productId) {
+                $product['estoque'] += $quantity;
+                break;
             }
         }
     }
 
-    public function addProductInCart(): void
+    private function getProductPrice(int $productId): float
     {
-        $this->validateProduct();
-        // incompleto
+        foreach ($this->products as $product) {
+            if ($product['id'] === $productId) {
+                return $product['preco'];
+            }
+        }
+        return 0;
     }
 }
-
-
-
-
-
 
 ?>

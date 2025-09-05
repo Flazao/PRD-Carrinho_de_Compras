@@ -1,7 +1,21 @@
 <?php
 
-require_once "CarrinhoDeCompras.php";
+require_once "CarrinhoDeCompra.php"; 
 
-echo "PRD - Carrinho de Compras";
+$cart = new CartShop(); 
 
-// Falta ainda
+echo $cart->addProductInCart(1);
+echo $cart->addProductInCart(2);
+echo $cart->addProductInCart(3);
+
+echo "-------------------------------------";
+
+$cart->removeProductInCart(3);
+
+echo "=====================================";
+
+$cart->validateProductExists(3);
+$cart->validateAvailableStock(2);
+
+echo "-------------------------------------";
+?>
