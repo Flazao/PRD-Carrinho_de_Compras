@@ -15,58 +15,6 @@ class CartShop
         ];
     }
 
-    public function addProductToCart(int $productId, int $quantity = 1): string
-    {
-        if ($quantity <= 0) {
-            return 'Quantidade inválida.';
-        }
-
-        if (!$this->validateProductExists($productId)) {
-            return 'Produto não existe.';
-        }
-
-        if (!$this->validateAvailableStock($productId, $quantity)) {
-            return 'Estoque insuficiente.';
-        }
-
-        foreach ($this->cart as &$item) {
-            if ($item['id_produto'] === $productId) {
-                $item['quantidade'] += $quantity;
-                $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
-                $this->updateStock($productId, -$quantity);
-                return 'Produto incrementado no carrinho.';
-            }
-        }
-
-        $price = $this->getProductPrice($productId);
-        $this->cart[] = [
-            'id_produto' => $productId,
-            'quantidade' => $quantity,
-            'subtotal' => $price * $quantity,
-        ];
-        $this->updateStock($productId, -$quantity);
-
-        return 'Produto adicionado ao carrinho.';
-    }
-
-    public function removeProductFromCart(int $productId): string
-    {
-        foreach ($this->cart as $index => &$item) {
-            if ($item['id_produto'] === $productId) {
-                $this->updateStock($productId, 1);
-                $item['quantidade']--;
-                if ($item['quantidade'] <= 0) {
-                    unset($this->cart[$index]);
-                    return 'Produto removido do carrinho.';
-                }
-                $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
-                return 'Quantidade do produto reduzida em 1.';
-            }
-        }
-
-        return 'Produto não está no carrinho.';
-    }
-
     public function listCart(): string
     {
         if (empty($this->cart)) {
@@ -167,5 +115,58 @@ class CartShop
             }
         }
         return null;
+    }
+
+    public function addProductToCart(int $productId, int $quantity = 1): string
+    {
+        if ($quantity <= 0) {
+            return 'Quantidade inválida.';
+        }
+
+        if (!$this->validateProductExists($productId)) {
+            return 'Produto não existe.';
+        }
+
+        if (!$this->validateAvailableStock($productId, $quantity)) {
+            return 'Estoque insuficiente.';
+        }
+
+        foreach ($this->cart as &$item) {
+            if ($item['id_produto'] === $productId) {
+
+                $item['quantidade'] += $quantity;
+                $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
+                $this->updateStock($productId, -$quantity);
+                return 'Produto incrementado no carrinho.';
+            }
+        }
+
+        $price = $this->getProductPrice($productId);
+        $this->cart[] = [
+            'id_produto' => $productId,
+            'quantidade' => $quantity,
+            'subtotal' => $price * $quantity,
+        ];
+        $this->updateStock($productId, -$quantity);
+
+        return 'Produto adicionado ao carrinho.';
+    }
+
+    public function removeProductFromCart(int $productId): string
+    {
+        foreach ($this->cart as $index => &$item) {
+            if ($item['id_produto'] === $productId) {
+                $this->updateStock($productId, 1);
+                $item['quantidade']--;
+                if ($item['quantidade'] <= 0) {
+                    unset($this->cart[$index]);
+                    return 'Produto removido do carrinho.';
+                }
+                $item['subtotal'] = $this->getProductPrice($productId) * $item['quantidade'];
+                return 'Quantidade do produto reduzida em 1.';
+            }
+        }
+
+        return 'Produto não está no carrinho.';
     }
 }
