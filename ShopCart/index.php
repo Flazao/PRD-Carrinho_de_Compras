@@ -4,6 +4,8 @@ require_once "CarrinhoDeCompra.php";
 
 $cart = new CartShop();
 
+echo "<h1>Sistema PRD — Carrinho de compras </h1>";
+
 echo $cart->addProductToCart(1, 2) . "<br>";
 echo $cart->addProductToCart(2) . "<br>";
 echo $cart->addProductToCart(3, 2) . "<br>";
