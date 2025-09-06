@@ -36,6 +36,8 @@ ____________________________________________________________
 • C:\xampp\htdocs\ShopCart
 _______________________________________________________________
 
+## FUNÇÕES
+
 ## __construct
 Inicializa o carrinho de compras, criando uma lista fixa de produtos, cada um com seu id, nome, preço e estoque atual. Prepara o ambiente para utilização do sistema, deixando o carrinho vazio.
 
